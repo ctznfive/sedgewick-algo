@@ -2,10 +2,10 @@ import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-    private int n;
+    private final int n;
     private boolean[][] grid;
     private int numOpen;
-    private WeightedQuickUnionUF unionData;
+    private final WeightedQuickUnionUF unionData;
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
@@ -74,6 +74,7 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
+        if (n == 1) return isOpen(1, 1);
         return unionData.find(0) == unionData.find(n * n + 1);
     }
 
@@ -84,11 +85,13 @@ public class Percolation {
         StdOut.println(percolationModel.isOpen(n, n));
         StdOut.println(percolationModel.isFull(n, n));
         StdOut.println(percolationModel.numberOfOpenSites());
+
         for (int i = 0; i < n; i++)
             percolationModel.open(i + 1, n);
         StdOut.println(percolationModel.isOpen(n, n));
         StdOut.println(percolationModel.isFull(n, n));
         StdOut.println(percolationModel.numberOfOpenSites());
+
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 StdOut.print(percolationModel.grid[i][j] + " ");
