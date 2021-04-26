@@ -6,6 +6,8 @@ public class Percolation {
     private boolean[][] grid;
     private int numOpen;
     private final WeightedQuickUnionUF unionData;
+    // a copy of the data structure to solve the backwash problem
+    private final WeightedQuickUnionUF unionDataBackwash;
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
@@ -17,9 +19,11 @@ public class Percolation {
 
         // the virtual-top / virtual-bottom trick
         this.unionData = new WeightedQuickUnionUF(n * n + 2);
+        this.unionDataBackwash = new WeightedQuickUnionUF(n * n + 1);
         for (int i = 1; i <= n; i++) {
             unionData.union(i, 0);
             unionData.union(n * n + 1, n * n + 1 - i);
+            unionDataBackwash.union(i, 0);
         }
     }
 
@@ -44,14 +48,22 @@ public class Percolation {
         numOpen++;
 
         int p = xyTo1D(row, col);
-        if (i > 0 && grid[i - 1][j])
+        if (i > 0 && grid[i - 1][j]) {
             unionData.union(p, p - n);
-        if (i < n - 1 && grid[i + 1][j])
+            unionDataBackwash.union(p, p - n);
+        }
+        if (i < n - 1 && grid[i + 1][j]) {
             unionData.union(p, p + n);
-        if (j > 0 && grid[i][j - 1])
+            unionDataBackwash.union(p, p + n);
+        }
+        if (j > 0 && grid[i][j - 1]) {
             unionData.union(p, p - 1);
-        if (j < n - 1 && grid[i][j + 1])
+            unionDataBackwash.union(p, p - 1);
+        }
+        if (j < n - 1 && grid[i][j + 1]) {
             unionData.union(p, p + 1);
+            unionDataBackwash.union(p, p + 1);
+        }
     }
 
     // is the site (row, col) open?
@@ -64,7 +76,7 @@ public class Percolation {
     public boolean isFull(int row, int col) {
         validIndices(row, col);
         return grid[row - 1][col - 1] &&
-                unionData.find(0) == unionData.find(xyTo1D(row, col));
+                unionDataBackwash.find(0) == unionDataBackwash.find(xyTo1D(row, col));
     }
 
     // returns the number of open sites
