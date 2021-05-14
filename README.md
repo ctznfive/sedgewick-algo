@@ -4,3 +4,5 @@ This repository contains my weekly programming assignments from amazing Algorith
 [Algorithms, Part I](https://www.coursera.org/learn/algorithms-part1)
 
 [Algorithms, Part II](https://www.coursera.org/learn/algorithms-part2)
+
+![Algorithms](https://algs4.cs.princeton.edu/cover.png)
